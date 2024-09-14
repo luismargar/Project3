@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 
 const myArray = ref([])
 const month = ref('')
@@ -20,6 +20,22 @@ const addGroceries = () =>{
   input_category.value = null
 }
 
+const removegroceries = (x) =>{
+  myArray.value = myArray.value.filter(Element => Element !== x)
+}
+
+onMounted ( () =>{
+  month.value = localStorage.getItem('month') || ''
+  myArray.value = JSON.parse(localStorage.getItem('myArray')) || []
+})
+
+watch(month, (newVal) =>{
+  localStorage.setItem('month', newVal)
+})
+
+watch(myArray, (newVal) =>{
+  localStorage.setItem('myArray', JSON.stringify(newVal))
+}, {deep: true})
 
 </script>
 
@@ -58,20 +74,21 @@ const addGroceries = () =>{
     <section class="Groceries-list">
       <div class="list">
         <div v-for="x in myArray" :class="`groceries-item ${x.done ? 'done' : 'not-done'}`" :key="x">
+
           <label>
             <input type="checkbox" v-model="x.done"/>
             <span :class="`bubble ${x.category}`"></span>
           </label>
+
           <div class="groceries-content">
             <input type="text" v-model="x.content"/>
           </div>
+
+          <div class="actions">
+            <button class="delete" @click="removegroceries(x)">Delete</button>
+          </div>
         </div>
       </div>
-
-
     </section>
-
-
   </main>
-
 </template>
