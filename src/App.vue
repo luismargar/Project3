@@ -13,6 +13,7 @@ const addGroceries = () =>{
   myArray.value.push({
     content: input_content.value,
     category: input_category.value,
+    done: false,
   })
 
   input_content.value = ''
@@ -55,6 +56,17 @@ const addGroceries = () =>{
     </section>
 
     <section class="Groceries-list">
+      <div class="list">
+        <div v-for="x in myArray" :class="`groceries-item ${x.done ? 'done' : 'not-done'}`" :key="x">
+          <label>
+            <input type="checkbox" v-model="x.done"/>
+            <span :class="`bubble ${x.category}`"></span>
+          </label>
+          <div class="groceries-content">
+            <input type="text" v-model="x.content"/>
+          </div>
+        </div>
+      </div>
 
 
     </section>
